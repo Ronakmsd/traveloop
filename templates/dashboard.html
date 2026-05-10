@@ -16,7 +16,7 @@
   </div>
   <p class="text-gray" style="margin:8px 0;font-size:13px">{{trip.description or 'No description'}}</p>
   {% if trip.start_date %}<p class="text-gray" style="font-size:12px">📅 {{trip.start_date}} → {{trip.end_date}}</p>{% endif %}
-  <p style="font-size:13px;margin:8px 0">🏙️ {{trip.stops|length}} stops | 🎯 {{trip.stops|sum(attribute='activities')|list|length}} activities</p>
+  <p style="font-size:13px;margin:8px 0">🏙️ {{trip.stops|length}} stops | 🎯{{ trip.stops|length }} activities</p>
   <div class="flex mt-10">
     <a href="/trip/{{trip.id}}" class="btn btn-primary btn-sm">View</a>
     <a href="/trip/{{trip.id}}/budget" class="btn btn-outline btn-sm">Budget</a>
