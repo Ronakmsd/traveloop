@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="flex-between" style="margin-bottom:20px">
+  <div>
+    <h1>{{trip.name}}</h1>
+    <p class="text-gray">{{trip.description or ''}}</p>
+    {% if trip.start_date %}<p style="color:#667eea;font-size:14px">📅 {{trip.start_date}} → {{trip.end_date}}</p>{% endif %}
+  </div>
+  <div class="flex">
+    <a href="/trip/{{trip.id}}/budget" class="btn btn-primary">💰 Budget</a>
+    {% if trip.is_public %}<a href="/public/{{trip.id}}" class="btn btn-outline btn-sm">🌐 Public View</a>{% endif %}
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:20px">
+<div>
+<!-- STOPS -->
+<div class="card">
+  <h2>🏙️ Trip Stops ({{trip.stops|length}})</h2>
+  {% for stop in trip.stops %}
+  <div style="border:2px solid #e2e8f0;border-radius:12px;padding:15px;margin-bottom:15px">
+    <div class="flex-between">
+      <div>
+        <h3>📍 {{stop.city}}, {{stop.country or ''}}</h3>
+        {% if stop.start_date %}<p style="font-size:12px;color:#667eea">{{stop.start_date}} → {{stop.end_date}}</p>{% endif %}
+      </div>
+      <form method="POST" action="/stop/{{stop.id}}/delete">
+        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+      </form>
+    </div>
+    <!-- Activities -->
+    {% if stop.activities %}
+    <div style="margin-top:12px">
+      {% for act in stop.activities %}
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;background:#f7fafc;border-radius:8px;margin-bottom:6px">
+        <div>
+          <span style="font-weight:600;font-size:13px">{{act.name}}</span>
+          <span class="badge badge-purple" style="margin-left:8px">{{act.category}}</span>
+          {% if act.duration %}<span style="font-size:11px;color:#718096"> • {{act.duration}}</span>{% endif %}
+        </div>
+        <div class="flex">
+          <span style="font-weight:700;color:#059669;font-size:13px">₹{{act.cost|int}}</span>
+          <form method="POST" action="/activity/{{act.id}}/delete" style="margin:0">
+            <button type="submit" class="btn btn-danger btn-sm">✕</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <!-- Add Activity Form -->
+    <details style="margin-top:10px">
+      <summary style="cursor:pointer;color:#667eea;font-weight:600;font-size:13px">+ Add Activity</summary>
+      <form method="POST" action="/stop/{{stop.id}}/activity/add" style="margin-top:10px;background:#f7fafc;padding:12px;border-radius:10px">
+        <input type="text" name="name" placeholder="Activity name" required style="margin-bottom:8px">
+        <div class="grid-2" style="gap:8px">
+          <select name="category">
+            <option>Sightseeing</option><option>Food</option><option>Adventure</option><option>Culture</option><option>Shopping</option><option>Wellness</option>
+          </select>
+          <input type="number" name="cost" placeholder="Cost (₹)" min="0" step="0.01">
+        </div>
+        <input type="text" name="duration" placeholder="Duration (e.g. 2 hours)">
+        <button type="submit" class="btn btn-success btn-sm">Add Activity</button>
+      </form>
+    </details>
+  </div>
+  {% endfor %}
+
+  <!-- Add Stop Form -->
+  <details style="margin-top:10px">
+    <summary style="cursor:pointer;color:#667eea;font-weight:700">+ Add New City Stop</summary>
+    <form method="POST" action="/trip/{{trip.id}}/stop/add" style="margin-top:15px">
+      <div class="grid-2">
+        <div><label>City *</label><input type="text" name="city" placeholder="e.g. Paris" required></div>
+        <div><label>Country</label><input type="text" name="country" placeholder="e.g. France"></div>
+      </div>
+      <div class="grid-2">
+        <div><label>Arrival Date</label><input type="date" name="start_date"></div>
+        <div><label>Departure Date</label><input type="date" name="end_date"></div>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Stop</button>
+    </form>
+  </details>
+</div>
+</div>
+
+<div>
+<!-- BUDGET SUMMARY -->
+<div class="card">
+  <h2>💰 Budget Summary</h2>
+  <div style="text-align:center;padding:15px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:12px;margin-bottom:15px">
+    <p style="color:rgba(255,255,255,0.8);font-size:12px">Total Estimated Cost</p>
+    <p style="color:white;font-size:28px;font-weight:800">₹{{total_cost|int}}</p>
+  </div>
+  {% for cat, cost in cost_by_category.items() %}
+  <div class="flex-between" style="padding:6px 0;border-bottom:1px solid #f0f0f0">
+    <span style="font-size:13px">{{cat}}</span>
+    <span style="font-weight:700;color:#667eea">₹{{cost|int}}</span>
+  </div>
+  {% endfor %}
+  <a href="/trip/{{trip.id}}/budget" class="btn btn-primary" style="width:100%;text-align:center;margin-top:15px;display:block">Full Budget Report</a>
+</div>
+
+<!-- NOTES -->
+<div class="card">
+  <h2>📝 Notes</h2>
+  {% for note in trip.notes %}
+  <div style="background:#f7fafc;padding:10px;border-radius:8px;margin-bottom:8px;font-size:13px">
+    <div class="flex-between">
+      <p>{{note.content}}</p>
+      <form method="POST" action="/note/{{note.id}}/delete">
+        <button type="submit" class="btn btn-danger btn-sm">✕</button>
+      </form>
+    </div>
+    <p style="font-size:11px;color:#718096;margin-top:4px">{{note.created_at.strftime('%d %b')}}</p>
+  </div>
+  {% endfor %}
+  <form method="POST" action="/trip/{{trip.id}}/note/add">
+    <textarea name="content" placeholder="Add a note..." rows="2" style="margin-bottom:8px"></textarea>
+    <button type="submit" class="btn btn-outline btn-sm">Save Note</button>
+  </form>
+</div>
+
+<!-- CHECKLIST -->
+<div class="card">
+  <h2>🎒 Packing List</h2>
+  {% for item in trip.checklist %}
+  <div class="flex-between" style="padding:6px 0;border-bottom:1px solid #f0f0f0">
+    <div class="flex">
+      <form method="POST" action="/checklist/{{item.id}}/toggle" style="margin:0">
+        <button type="submit" class="btn btn-sm" style="background:{% if item.is_packed %}#2ed573{% else %}#e2e8f0{% endif %};color:{% if item.is_packed %}white{% else %}#333{% endif %}">{% if item.is_packed %}✓{% else %}○{% endif %}</button>
+      </form>
+      <span style="font-size:13px;{% if item.is_packed %}text-decoration:line-through;color:#718096{% endif %}">{{item.item}}</span>
+    </div>
+    <form method="POST" action="/checklist/{{item.id}}/delete">
+      <button type="submit" class="btn btn-danger btn-sm">✕</button>
+    </form>
+  </div>
+  {% endfor %}
+  <form method="POST" action="/trip/{{trip.id}}/checklist/add" style="margin-top:12px">
+    <input type="text" name="item" placeholder="Add item..." required style="margin-bottom:8px">
+    <select name="category" style="margin-bottom:8px">
+      <option>General</option><option>Clothing</option><option>Documents</option><option>Electronics</option><option>Medicines</option>
+    </select>
+    <button type="submit" class="btn btn-outline btn-sm">Add Item</button>
+  </form>
+</div>
+</div>
+</div>
+{% endblock %}

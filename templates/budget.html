@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="flex-between" style="margin-bottom:25px">
+  <div><h1>💰 Budget Report</h1><p class="text-gray">{{trip.name}}</p></div>
+  <a href="/trip/{{trip.id}}" class="btn btn-outline">← Back to Trip</a>
+</div>
+<div class="grid-2">
+<div class="card" style="text-align:center">
+  <p class="text-gray">Total Trip Cost</p>
+  <p style="font-size:42px;font-weight:800;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent">₹{{total|int}}</p>
+  <p class="text-gray">Avg per day: ₹{{avg_per_day|int}}</p>
+</div>
+<div class="card">
+  <h2>By Category</h2>
+  {% for cat, cost in cost_by_category.items() %}
+  <div class="flex-between" style="margin-bottom:12px">
+    <span class="badge badge-purple">{{cat}}</span>
+    <div style="flex:1;margin:0 12px;background:#e2e8f0;border-radius:10px;height:8px">
+      <div style="width:{{(cost/total*100)|int if total > 0 else 0}}%;background:linear-gradient(135deg,#667eea,#764ba2);height:8px;border-radius:10px"></div>
+    </div>
+    <span style="font-weight:700;color:#667eea">₹{{cost|int}}</span>
+  </div>
+  {% endfor %}
+</div>
+</div>
+<div class="card">
+  <h2>By City</h2>
+  <div class="grid-3">
+  {% for city, cost in cost_by_city.items() %}
+  <div style="text-align:center;padding:20px;background:#f7fafc;border-radius:12px">
+    <p style="font-size:20px">🏙️</p>
+    <h3>{{city}}</h3>
+    <p style="font-size:22px;font-weight:800;color:#667eea">₹{{cost|int}}</p>
+    {% if total > 0 %}<p class="text-gray" style="font-size:12px">{{(cost/total*100)|int}}% of total</p>{% endif %}
+  </div>
+  {% endfor %}
+  </div>
+</div>
+{% endblock %}

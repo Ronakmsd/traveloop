@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="flex-between" style="margin-bottom:25px">
+  <h1>My Trips 🗺️</h1>
+  <a href="/trip/create" class="btn btn-primary">+ New Trip</a>
+</div>
+{% if trips %}
+{% for trip in trips %}
+<div class="card">
+  <div class="flex-between">
+    <div>
+      <h2 style="margin-bottom:5px">{{trip.name}}</h2>
+      <p class="text-gray">{{trip.description or 'No description added'}}</p>
+      {% if trip.start_date %}<p style="font-size:13px;color:#667eea;margin-top:5px">📅 {{trip.start_date}} → {{trip.end_date}}</p>{% endif %}
+      <p style="font-size:13px;margin-top:5px">🏙️ {{trip.stops|length}} cities | 🎯 Activities planned</p>
+    </div>
+    <div class="flex" style="flex-direction:column;gap:8px;align-items:flex-end">
+      {% if trip.is_public %}<span class="badge badge-green">🌐 Public</span>{% else %}<span class="badge badge-blue">🔒 Private</span>{% endif %}
+      <div class="flex">
+        <a href="/trip/{{trip.id}}" class="btn btn-primary btn-sm">View</a>
+        <a href="/trip/{{trip.id}}/budget" class="btn btn-outline btn-sm">💰 Budget</a>
+        <form method="POST" action="/trip/{{trip.id}}/delete" style="display:inline" onsubmit="return confirm('Delete this trip?')">
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="card" style="text-align:center;padding:60px">
+  <div style="font-size:50px">✈️</div>
+  <h2>No trips planned yet</h2>
+  <a href="/trip/create" class="btn btn-primary mt-20">Plan Your First Trip</a>
+</div>
+{% endif %}
+{% endblock %}

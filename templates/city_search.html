@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>🔍 Discover Cities</h1>
+<p class="text-gray" style="margin-bottom:20px">Find your next destination</p>
+<form method="GET" style="margin-bottom:25px">
+  <div class="flex">
+    <input type="text" name="q" value="{{query}}" placeholder="Search cities..." style="margin:0;flex:1">
+    <button type="submit" class="btn btn-primary">Search</button>
+  </div>
+</form>
+<div class="grid-3">
+{% for city in cities %}
+<div class="card">
+  <h3>{{city.name}}</h3>
+  <p class="text-gray" style="font-size:13px">🌍 {{city.country}}</p>
+  <p style="font-size:13px;margin:8px 0">{{city.description}}</p>
+  <div class="flex" style="margin-top:10px">
+    <span class="badge badge-purple">{{city.cost_index}} Cost</span>
+    <span class="badge badge-orange">⭐ {{city.popularity}}%</span>
+  </div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}

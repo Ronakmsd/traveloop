@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="text-align:center;padding:80px 20px">
+  <div style="font-size:60px;margin-bottom:20px">✈️</div>
+  <h1 style="font-size:48px;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:15px">Traveloop</h1>
+  <p style="font-size:20px;color:#718096;max-width:500px;margin:0 auto 40px">Plan your perfect multi-city adventure. Create itineraries, track budgets, and share your journeys.</p>
+  <div class="flex" style="justify-content:center;gap:15px">
+    <a href="/signup" class="btn btn-primary" style="font-size:16px;padding:14px 30px">🚀 Start Planning Free</a>
+    <a href="/login" class="btn btn-outline" style="font-size:16px;padding:14px 30px">Login</a>
+  </div>
+  <div class="grid-3" style="margin-top:60px;text-align:left">
+    <div class="card"><div style="font-size:30px">🗺️</div><h3 style="margin:10px 0">Multi-City Itineraries</h3><p class="text-gray">Plan trips across multiple cities with day-wise activities</p></div>
+    <div class="card"><div style="font-size:30px">💰</div><h3 style="margin:10px 0">Budget Tracking</h3><p class="text-gray">Auto-calculate costs and stay within your budget</p></div>
+    <div class="card"><div style="font-size:30px">🌍</div><h3 style="margin:10px 0">Share & Inspire</h3><p class="text-gray">Share your plans publicly and inspire other travelers</p></div>
+  </div>
+</div>
+{% endblock %}

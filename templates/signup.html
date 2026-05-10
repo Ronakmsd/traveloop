@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width:420px;margin:40px auto">
+  <div class="card">
+    <div style="text-align:center;margin-bottom:25px"><div style="font-size:40px">✈️</div><h1>Join Traveloop</h1><p class="text-gray">Start planning your dream trips</p></div>
+    <form method="POST">
+      <label>Full Name</label><input type="text" name="name" placeholder="Ronak Bhanushali" required>
+      <label>Email</label><input type="email" name="email" placeholder="your@email.com" required>
+      <label>Password</label><input type="password" name="password" placeholder="Create password" required>
+      <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;font-size:16px;margin-top:5px">Create Account →</button>
+    </form>
+    <p class="text-gray mt-10" style="text-align:center">Already have account? <a href="/login" style="color:#667eea;font-weight:600">Login</a></p>
+  </div>
+</div>
+{% endblock %}

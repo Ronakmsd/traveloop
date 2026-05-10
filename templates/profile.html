@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width:500px;margin:0 auto">
+<div class="card" style="text-align:center;margin-bottom:20px">
+  <div style="width:80px;height:80px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;font-size:30px;color:white">{{current_user.name[0].upper()}}</div>
+  <h1>{{current_user.name}}</h1>
+  <p class="text-gray">{{current_user.email}}</p>
+  <p class="text-gray" style="font-size:12px">Member since {{current_user.created_at.strftime('%B %Y')}}</p>
+</div>
+<div class="card">
+  <h2>Edit Profile</h2>
+  <form method="POST">
+    <label>Full Name</label><input type="text" name="name" value="{{current_user.name}}" required>
+    <label>Email</label><input type="email" value="{{current_user.email}}" disabled style="background:#f7fafc;color:#718096">
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+  </form>
+</div>
+<div class="card">
+  <h2>Your Stats</h2>
+  <div class="grid-2">
+    <div style="text-align:center;padding:15px;background:#f7fafc;border-radius:12px">
+      <p style="font-size:30px;font-weight:800;color:#667eea">{{current_user.trips|length}}</p>
+      <p class="text-gray">Total Trips</p>
+    </div>
+    <div style="text-align:center;padding:15px;background:#f7fafc;border-radius:12px">
+      <p style="font-size:30px;font-weight:800;color:#764ba2">{{current_user.trips|selectattr('is_public')|list|length}}</p>
+      <p class="text-gray">Public Trips</p>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

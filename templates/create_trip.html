@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width:600px;margin:0 auto">
+  <h1>Plan New Trip ✈️</h1>
+  <p class="text-gray" style="margin-bottom:25px">Fill in the details to start your adventure</p>
+  <div class="card">
+    <form method="POST">
+      <label>Trip Name *</label>
+      <input type="text" name="name" placeholder="e.g. Europe Summer 2026" required>
+      <label>Description</label>
+      <textarea name="description" placeholder="What's this trip about?" rows="3"></textarea>
+      <div class="grid-2">
+        <div><label>Start Date</label><input type="date" name="start_date"></div>
+        <div><label>End Date</label><input type="date" name="end_date"></div>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <input type="checkbox" name="is_public" style="width:auto;margin:0"> Make this trip public (share with community)
+      </label>
+      <div class="flex mt-20">
+        <button type="submit" class="btn btn-primary">Create Trip →</button>
+        <a href="/trips" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

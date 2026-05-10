@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card" style="text-align:center;background:linear-gradient(135deg,#667eea,#764ba2);color:white;margin-bottom:25px">
+  <h1 style="color:white;font-size:36px">{{trip.name}}</h1>
+  <p style="opacity:0.9">Shared by {{trip.user.name}} • {{trip.stops|length}} cities</p>
+  {% if trip.start_date %}<p style="opacity:0.8;margin-top:5px">📅 {{trip.start_date}} → {{trip.end_date}}</p>{% endif %}
+</div>
+{% for stop in trip.stops %}
+<div class="card">
+  <h2>📍 {{stop.city}}, {{stop.country or ''}}</h2>
+  {% if stop.start_date %}<p style="color:#667eea;font-size:13px">{{stop.start_date}} → {{stop.end_date}}</p>{% endif %}
+  {% for act in stop.activities %}
+  <div style="display:flex;justify-content:space-between;padding:8px;background:#f7fafc;border-radius:8px;margin-top:8px">
+    <div><span style="font-weight:600">{{act.name}}</span><span class="badge badge-purple" style="margin-left:8px">{{act.category}}</span></div>
+    <span style="color:#059669;font-weight:700">₹{{act.cost|int}}</span>
+  </div>
+  {% endfor %}
+</div>
+{% endfor %}
+<div class="card" style="text-align:center">
+  <p style="font-size:18px;font-weight:700">Total Trip Cost: ₹{{total_cost|int}}</p>
+  {% if current_user.is_authenticated %}
+  <a href="/trip/create" class="btn btn-primary mt-10">Plan Similar Trip</a>
+  {% else %}
+  <a href="/signup" class="btn btn-primary mt-10">Join Traveloop to Plan</a>
+  {% endif %}
+</div>
+{% endblock %}
